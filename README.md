@@ -177,159 +177,76 @@ The project demonstrates concepts from multiple Computer Engineering subjects.
 
 # Module Division
 
-## Module 1 – User & Authentication Management
+## Module 1: User & Authentication Management
 
-**Subjects Used:** OOP + Web Technology
+**Primarily draws from:** OOP + Web Technology
+**Team Members:** **Om, Ritesh, Aayush**
 
-### Responsibilities
-
-* User Registration
-* Secure Login
-* JWT/Session Authentication
-* Password Encryption
-* Role-based Authorization
-* Profile Management
-
-### Classes
-
-* User
-* Admin
-* Faculty
-* Student
+This module is responsible for managing user accounts and providing secure access to the system through role-based authentication. It implements separate user roles such as **Admin, Faculty, and Student**, ensuring that each user can only access the functionalities assigned to their role. The module includes user registration, secure login and logout, password encryption, session/JWT-based authentication, and profile management. It serves as the entry point of the application and establishes a secure environment for all other modules by enforcing authentication and authorization mechanisms.
 
 ---
 
-## Module 2 – Academic Master Data Management
+## Module 2: Academic Master Data Management
 
-**Subjects Used:** DBMS + OOP
+**Primarily draws from:** DBMS + OOP
+**Team Members:** **Om, Ritesh, Aayush**
 
-### Responsibilities
-
-* Student Management
-* Faculty Management
-* Subject Management
-* Batch Management
-* Enrollment Management
-
-### Operations
-
-* Add
-* Edit
-* Delete
-* Search
-* View Records
+This module manages all fundamental academic information required by the system. It provides CRUD operations for **Students, Faculty, Subjects, Departments, Batches, Semesters, and Enrollments** while maintaining data consistency using a normalized relational database. The module ensures referential integrity between academic entities and serves as the central repository for all master data used by other modules. Object-oriented domain classes are mapped to database tables, enabling efficient storage, retrieval, and management of academic records.
 
 ---
 
-## Module 3 – CO/PO Definition & Mapping
+## Module 3: CO/PO Definition & Mapping
 
-**Subjects Used:** DBMS + Data Structures
+**Primarily draws from:** DBMS + Data Structures
+**Team Members:** **Asmi, Niraj, Parth**
 
-### Responsibilities
-
-* Create Course Outcomes
-* Create Programme Outcomes
-* CO–PO Mapping
-* Weightage Assignment
-* Mapping Validation
-
-### Data Structures
-
-* Matrix Representation
-* HashMaps
-* Lists
+This module enables the creation and management of **Course Outcomes (COs)** and **Programme Outcomes (POs)** for different subjects and academic programs. It provides interfaces for defining COs, creating POs, and establishing mappings between them using predefined attainment levels and weightages. The CO–PO relationships are represented using matrix-based data structures, allowing efficient retrieval and computation during attainment analysis. The stored mapping information serves as the foundation for automatic CO and PO attainment calculations performed by the analytics engine.
 
 ---
 
-## Module 4 – Assessment & Marks Entry
+## Module 4: Assessment & Marks Entry
 
-**Subjects Used:** OOP + DBMS
+**Primarily draws from:** OOP + DBMS
+**Team Members:** **Asmi, Niraj, Parth**
 
-### Responsibilities
-
-* Assessment Creation
-* Internal Tests
-* Assignments
-* Practicals
-* Unit Tests
-* Marks Entry
-* Bulk CSV Upload
-* Validation
-* Transaction Management
+This module is responsible for creating assessments and maintaining student marks throughout the academic semester. It supports multiple assessment types such as **Internal Tests, Assignments, Practicals, Unit Tests, and End-Semester Examinations** through polymorphic assessment classes. Faculty members can enter marks individually or upload them in bulk using CSV or Excel files. The module validates all input data, handles exceptions during data entry, and performs transaction-safe database operations to ensure accuracy and reliability of academic records.
 
 ---
 
-## Module 5 – Analytics & Attainment Engine
+## Module 5: Aggregation & CO/PO Attainment Engine
 
-**Subjects Used:** Data Structures + PPL
+**Primarily draws from:** Data Structures + Principles of Programming Languages
+**Team Members:** **Srujal, Atharva, Niranjan**
 
-### Responsibilities
-
-* Calculate Average Marks
-* Highest Marks
-* Lowest Marks
-* Pass Percentage
-* Grade Distribution
-* CO Attainment
-* PO Attainment
-* Batch-wise Analytics
-
-### Algorithms Used
-
-* Weighted Average
-* Percentage Calculation
-* HashMap Aggregation
-* Sorting
-* Ranking
+This module acts as the computational core of the application by processing assessment data and generating meaningful academic analytics. It computes statistics such as **class average, highest marks, lowest marks, pass percentage, grade distribution, student rankings, and subject-wise performance** using efficient data structures like arrays, lists, and HashMaps. The module also implements weighted algorithms and strategy-based computation methods to automatically calculate **Course Outcome (CO)** and **Programme Outcome (PO)** attainment levels. The implementation focuses on optimized performance and scalability to efficiently process large batches of student records.
 
 ---
 
-## Module 6 – Dashboard & Visualization
+## Module 6: Dashboard & Visualization
 
-**Subjects Used:** Web Technology
+**Primarily draws from:** Web Technology
+**Team Members:** **Janhavi, Krisha, Renuka**
 
-### Responsibilities
-
-* Student Dashboard
-* Faculty Dashboard
-* Admin Dashboard
-* Charts
-* Graphs
-* Rank Lists
-* Performance Trends
-* Live Analytics
+This module provides interactive and role-based dashboards that present academic data in a clear and visually appealing manner. Separate dashboards are developed for **Admin, Faculty, and Student** users, displaying analytics through charts, graphs, tables, and performance indicators. The module retrieves data using REST APIs and dynamically updates visualizations without requiring full page reloads. Responsive web design principles are applied to ensure seamless access across desktops, tablets, and mobile devices while providing an intuitive user experience.
 
 ---
 
-## Module 7 – Report Generation & Export
+## Module 7: Report Generation & Export
 
-**Subjects Used:** Software Engineering + Web Technology
+**Primarily draws from:** Web Technology + Software Engineering
+**Team Members:** **Janhavi, Krisha, Renuka**
 
-### Responsibilities
-
-* Individual Marksheet
-* Class Report
-* CO Attainment Report
-* PO Attainment Report
-* PDF Export
-* Excel Export
-* Print Support
+This module automates the generation of academic reports required by students, faculty, departments, and accreditation bodies. It prepares standardized reports such as **individual mark sheets, class performance reports, subject-wise analysis reports, CO attainment reports, and PO attainment reports**. The module supports exporting reports in **PDF and Excel** formats using server-side report generation libraries. Template-based report formatting ensures consistency, readability, and compliance with institutional documentation requirements.
 
 ---
 
-## Module 8 – Testing, Documentation & Deployment
+## Module 8: Testing, Documentation & Deployment
 
-**Subjects Used:** Software Engineering
+**Primarily draws from:** Software Engineering
+**Team Members:** **Srujal, Atharva, Niranjan**
 
-### Responsibilities
+This module focuses on ensuring the overall quality, reliability, and maintainability of the software system. It includes **unit testing** of individual components, **integration testing** of end-to-end workflows, and **User Acceptance Testing (UAT)** using sample academic data to validate system functionality. In addition, the module is responsible for preparing comprehensive project documentation, including the **Software Requirements Specification (SRS), UML diagrams, design documents, testing reports, deployment guidelines, and user manuals**. It also manages version control, deployment configuration, and final project packaging to ensure a smooth software delivery process.
 
-* Unit Testing
-* Integration Testing
-* User Acceptance Testing
-* Documentation
-* SRS
-* User Manual
-* Deployment
 
 ---
 

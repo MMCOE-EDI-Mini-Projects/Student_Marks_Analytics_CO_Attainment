@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Admin Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <h2>Marks Analytics</h2>
+
+        <a href="#">Dashboard</a>
+
+        <a href="#">Users</a>
+
+        <a href="#">Students</a>
+
+        <a href="#">Faculty</a>
+
+        <a href="#">Subjects</a>
+
+        <a href="#">Audit Logs</a>
+
+        <button
+            onclick="logout()"
+            class="logout-btn"
+        >
+            Logout
+        </button>
+
+    </aside>
+
+
+    <main class="main">
+
+        <h1>Admin Dashboard</h1>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>Students</h3>
+
+                <p>250</p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Faculty</h3>
+
+                <p>25</p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Subjects</h3>
+
+                <p>42</p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>CO Attainment</h3>
+
+                <p>82%</p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="js/common.js"></script>
+
+<script>
+
+async function loadAdmin() {
+
+    const user =
+        await getCurrentUser();
+
+    if (!user) return;
+
+
+    if (user.role !== "ADMIN") {
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+}
+
+loadAdmin();
+
+</script>
+
+</body>
+
+</html>

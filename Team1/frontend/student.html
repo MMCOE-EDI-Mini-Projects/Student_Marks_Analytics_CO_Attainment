@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Student Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <h2>Student</h2>
+
+        <a href="#">Dashboard</a>
+
+        <a href="#">My Marks</a>
+
+        <a href="#">CO Attainment</a>
+
+        <a href="#">Profile</a>
+
+        <button
+            onclick="logout()"
+            class="logout-btn"
+        >
+            Logout
+        </button>
+
+    </aside>
+
+
+    <main class="main">
+
+        <h1>Student Dashboard</h1>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>Average Marks</h3>
+
+                <p>78%</p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>CO Attainment</h3>
+
+                <p>84%</p>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Subjects</h3>
+
+                <p>6</p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="js/common.js"></script>
+
+<script>
+
+async function checkStudent() {
+
+    const user =
+        await getCurrentUser();
+
+
+    if (!user) return;
+
+
+    if (user.role !== "STUDENT") {
+
+        window.location.href =
+            "login.html";
+
+    }
+}
+
+checkStudent();
+
+</script>
+
+</body>
+
+</html>

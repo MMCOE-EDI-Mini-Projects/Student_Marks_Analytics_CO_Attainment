@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Marks Analytics - Authentication</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <div class="logo">
+            MA
+        </div>
+
+        <h1>Marks Analytics</h1>
+
+        <p class="subtitle">
+            Student Marks & CO Attainment System
+        </p>
+
+
+        <!-- ============================= -->
+        <!-- LOGIN -->
+        <!-- ============================= -->
+
+        <div id="loginSection">
+
+            <h2>Login</h2>
+
+            <p class="section-text">
+                Login to your account
+            </p>
+
+
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label>
+                        Username or Email
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username_or_email"
+                        placeholder="Enter username or email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    Login
+                </button>
+
+
+                <p
+                    id="loginMessage"
+                    class="message"
+                ></p>
+
+            </form>
+
+
+            <div class="auth-links">
+
+                <a href="#">
+                    Forgot Password?
+                </a>
+
+            </div>
+
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+
+            <p class="signup-text">
+                Don't have an account?
+            </p>
+
+
+            <button
+                class="secondary-btn"
+                onclick="showSignup()"
+            >
+                Create Account
+            </button>
+
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- SIGNUP -->
+        <!-- ============================= -->
+
+        <div
+            id="signupSection"
+            style="display: none;"
+        >
+
+            <h2>Create Account</h2>
+
+            <p class="section-text">
+                Select your account type
+            </p>
+
+
+            <!-- ROLE SELECTION -->
+
+            <div class="role-container">
+
+                <button
+                    type="button"
+                    class="role-card"
+                    onclick="selectRole('STUDENT')"
+                >
+
+                    <div class="role-icon">
+                        🎓
+                    </div>
+
+                    <strong>Student</strong>
+
+                    <span>
+                        Student account
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="role-card"
+                    onclick="selectRole('FACULTY')"
+                >
+
+                    <div class="role-icon">
+                        👨‍🏫
+                    </div>
+
+                    <strong>Faculty</strong>
+
+                    <span>
+                        Faculty account
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="role-card"
+                    onclick="selectRole('ADMIN')"
+                >
+
+                    <div class="role-icon">
+                        🛡️
+                    </div>
+
+                    <strong>Admin</strong>
+
+                    <span>
+                        Administrator account
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <!-- SIGNUP FORM -->
+
+            <form
+                id="signupForm"
+                style="display: none;"
+            >
+
+                <input
+                    type="hidden"
+                    id="signupRole"
+                >
+
+
+                <div
+                    id="selectedRole"
+                    class="selected-role"
+                ></div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="signupName"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="signupUsername"
+                        placeholder="Choose username"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="signupEmail"
+                        placeholder="Enter email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- STUDENT FIELDS -->
+
+                <div
+                    id="studentFields"
+                    style="display: none;"
+                >
+
+                    <div class="form-group">
+
+                        <label>
+                            Roll Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="rollNo"
+                            placeholder="Enter roll number"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Department
+                        </label>
+
+                        <input
+                            type="text"
+                            id="studentDepartment"
+                            placeholder="Computer Engineering"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Semester
+                        </label>
+
+                        <input
+                            type="number"
+                            id="semester"
+                            placeholder="Enter semester"
+                            min="1"
+                            max="8"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- FACULTY FIELDS -->
+
+                <div
+                    id="facultyFields"
+                    style="display: none;"
+                >
+
+                    <div class="form-group">
+
+                        <label>
+                            Employee ID
+                        </label>
+
+                        <input
+                            type="text"
+                            id="employeeId"
+                            placeholder="Enter employee ID"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Department
+                        </label>
+
+                        <input
+                            type="text"
+                            id="facultyDepartment"
+                            placeholder="Computer Engineering"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        placeholder="Minimum 8 characters"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Confirm password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    Create Account
+                </button>
+
+
+                <p
+                    id="signupMessage"
+                    class="message"
+                ></p>
+
+            </form>
+
+
+            <button
+                class="back-btn"
+                onclick="showLogin()"
+            >
+                ← Back to Login
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="js/auth.js"></script>
+
+</body>
+
+</html>

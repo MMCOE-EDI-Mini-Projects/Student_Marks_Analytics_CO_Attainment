@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Faculty Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <h2>Faculty</h2>
+
+        <a href="#">Dashboard</a>
+
+        <a href="#">My Subjects</a>
+
+        <a href="#">Enter Marks</a>
+
+        <a href="#">CO Attainment</a>
+
+        <button
+            onclick="logout()"
+            class="logout-btn"
+        >
+            Logout
+        </button>
+
+    </aside>
+
+
+    <main class="main">
+
+        <h1>Faculty Dashboard</h1>
+
+        <div class="card">
+
+            <h2>Enter Student Marks</h2>
+
+            <input
+                id="studentId"
+                placeholder="Student ID"
+            >
+
+            <input
+                id="subjectId"
+                placeholder="Subject ID"
+            >
+
+            <input
+                id="marks"
+                type="number"
+                placeholder="Marks"
+            >
+
+            <button
+                onclick="addMarks()"
+                class="btn"
+            >
+                Save Marks
+            </button>
+
+            <p id="result"></p>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="js/common.js"></script>
+
+<script>
+
+async function checkFaculty() {
+
+    const user =
+        await getCurrentUser();
+
+    if (!user) return;
+
+
+    if (
+        user.role !== "FACULTY" &&
+        user.role !== "ADMIN"
+    ) {
+
+        window.location.href =
+            "login.html";
+    }
+}
+
+checkFaculty();
+
+
+async function addMarks() {
+
+    const csrfToken =
+        sessionStorage.getItem(
+            "csrfToken"
+        );
+
+
+    const student_id =
+        document.getElementById(
+            "studentId"
+        ).value;
+
+
+    const subject_id =
+        document.getElementById(
+            "subjectId"
+        ).value;
+
+
+    const marks =
+        document.getElementById(
+            "marks"
+        ).value;
+
+
+    const response =
+        await fetch(
+            "/api/faculty/marks",
+            {
+                method: "POST",
+
+                credentials: "include",
+
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    "X-CSRF-Token":
+                        csrfToken
+                },
+
+                body:
+                    JSON.stringify({
+                        student_id,
+                        subject_id,
+                        marks
+                    })
+            }
+        );
+
+
+    const data =
+        await response.json();
+
+
+    document.getElementById(
+        "result"
+    ).textContent =
+        data.message;
+}
+
+</script>
+
+</body>
+
+</html>

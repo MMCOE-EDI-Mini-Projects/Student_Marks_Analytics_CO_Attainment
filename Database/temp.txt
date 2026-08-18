@@ -1,1 +1,334 @@
+-- ============================================================================
+--  STUDENT MARKS ANALYTICS & CO ATTAINMENT TOOL
+--  Complete Database Schema (DDL)
+--  Engine   : MySQL 8.0+ (InnoDB, utf8mb4)
+--  Author   : Mini Project - Engineering Design & Innovation
+--  Run as   : mysql -u root -p < schema.sql
+-- ============================================================================
+
+DROP DATABASE IF EXISTS smacat_db;
+CREATE DATABASE smacat_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE smacat_db;
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ============================================================================
+-- MODULE 1: USER & AUTHENTICATION MANAGEMENT
+-- ============================================================================
+
+CREATE TABLE users (
+    user_id         INT AUTO_INCREMENT PRIMARY KEY,
+    name            VARCHAR(100)  NOT NULL,
+    email           VARCHAR(100)  NOT NULL UNIQUE,
+    password_hash   VARCHAR(255)  NOT NULL,
+    role            ENUM('ADMIN','FACULTY','STUDENT') NOT NULL,
+    is_active       BOOLEAN       NOT NULL DEFAULT TRUE,
+    created_at      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
+                                   ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE admins (
+    admin_id        INT AUTO_INCREMENT PRIMARY KEY,
+    user_id         INT NOT NULL UNIQUE,
+    CONSTRAINT fk_admin_user FOREIGN KEY (user_id)
+        REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE batches (
+    batch_id        INT AUTO_INCREMENT PRIMARY KEY,
+    batch_name      VARCHAR(50) NOT NULL UNIQUE,      -- e.g. 'CO-2023-27'
+    start_year      INT NOT NULL,
+    end_year        INT NOT NULL,
+    CHECK (end_year > start_year)
+) ENGINE=InnoDB;
+
+CREATE TABLE faculty (
+    faculty_id      INT AUTO_INCREMENT PRIMARY KEY,
+    user_id         INT NOT NULL UNIQUE,
+    department      VARCHAR(100) NOT NULL,
+    designation     VARCHAR(100),
+    CONSTRAINT fk_faculty_user FOREIGN KEY (user_id)
+        REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE students (
+    student_id       INT AUTO_INCREMENT PRIMARY KEY,
+    user_id          INT NOT NULL UNIQUE,
+    roll_no          VARCHAR(30) NOT NULL UNIQUE,
+    batch_id         INT NOT NULL,
+    current_semester TINYINT NOT NULL DEFAULT 1 CHECK (current_semester BETWEEN 1 AND 8),
+    CONSTRAINT fk_student_user  FOREIGN KEY (user_id)  REFERENCES users(user_id)   ON DELETE CASCADE,
+    CONSTRAINT fk_student_batch FOREIGN KEY (batch_id) REFERENCES batches(batch_id) ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- ============================================================================
+-- MODULE 2: ACADEMIC MASTER DATA MANAGEMENT
+-- ============================================================================
+
+CREATE TABLE subjects (
+    subject_id      INT AUTO_INCREMENT PRIMARY KEY,
+    subject_code    VARCHAR(20)  NOT NULL UNIQUE,
+    subject_name    VARCHAR(150) NOT NULL,
+    credits         TINYINT      NOT NULL,
+    semester        TINYINT      NOT NULL CHECK (semester BETWEEN 1 AND 8),
+    faculty_id      INT NULL,
+    CONSTRAINT fk_subject_faculty FOREIGN KEY (faculty_id)
+        REFERENCES faculty(faculty_id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE enrollments (
+    enrollment_id   INT AUTO_INCREMENT PRIMARY KEY,
+    student_id      INT NOT NULL,
+    subject_id      INT NOT NULL,
+    academic_year   VARCHAR(9) NOT NULL,               -- e.g. '2025-2026'
+    CONSTRAINT fk_enroll_student FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    CONSTRAINT fk_enroll_subject FOREIGN KEY (subject_id) REFERENCES subjects(subject_id) ON DELETE CASCADE,
+    UNIQUE KEY uq_enrollment (student_id, subject_id, academic_year)
+) ENGINE=InnoDB;
+
+-- ============================================================================
+-- MODULE 3: CO / PO DEFINITION & MAPPING
+-- ============================================================================
+
+CREATE TABLE course_outcomes (
+    co_id           INT AUTO_INCREMENT PRIMARY KEY,
+    subject_id      INT NOT NULL,
+    co_code         VARCHAR(20) NOT NULL,               -- e.g. 'CO1'
+    description     TEXT NOT NULL,
+    CONSTRAINT fk_co_subject FOREIGN KEY (subject_id) REFERENCES subjects(subject_id) ON DELETE CASCADE,
+    UNIQUE KEY uq_co (subject_id, co_code)
+) ENGINE=InnoDB;
+
+CREATE TABLE programme_outcomes (
+    po_id           INT AUTO_INCREMENT PRIMARY KEY,
+    po_code         VARCHAR(20) NOT NULL UNIQUE,         -- e.g. 'PO1'
+    description     TEXT NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE co_po_mapping (
+    mapping_id       INT AUTO_INCREMENT PRIMARY KEY,
+    co_id            INT NOT NULL,
+    po_id            INT NOT NULL,
+    mapping_strength TINYINT NOT NULL CHECK (mapping_strength BETWEEN 1 AND 3), -- 1=Low 2=Medium 3=High
+    CONSTRAINT fk_map_co FOREIGN KEY (co_id) REFERENCES course_outcomes(co_id) ON DELETE CASCADE,
+    CONSTRAINT fk_map_po FOREIGN KEY (po_id) REFERENCES programme_outcomes(po_id) ON DELETE CASCADE,
+    UNIQUE KEY uq_co_po (co_id, po_id)
+) ENGINE=InnoDB;
+
+-- ============================================================================
+-- MODULE 4: ASSESSMENT & MARKS ENTRY
+-- ============================================================================
+
+CREATE TABLE assessments (
+    assessment_id    INT AUTO_INCREMENT PRIMARY KEY,
+    subject_id       INT NOT NULL,
+    assessment_type  ENUM('INTERNAL_TEST','ASSIGNMENT','PRACTICAL','UNIT_TEST') NOT NULL,
+    title            VARCHAR(150) NOT NULL,
+    max_marks        DECIMAL(6,2) NOT NULL,
+    weightage        DECIMAL(5,2) NOT NULL,              -- % contribution to final subject score
+    conducted_on     DATE,
+    CONSTRAINT fk_assessment_subject FOREIGN KEY (subject_id) REFERENCES subjects(subject_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Which COs an assessment evaluates, and how much each CO counts within it
+CREATE TABLE assessment_co_map (
+    assessment_id    INT NOT NULL,
+    co_id            INT NOT NULL,
+    co_weightage     DECIMAL(5,2) NOT NULL,
+    PRIMARY KEY (assessment_id, co_id),
+    CONSTRAINT fk_acm_assessment FOREIGN KEY (assessment_id) REFERENCES assessments(assessment_id) ON DELETE CASCADE,
+    CONSTRAINT fk_acm_co         FOREIGN KEY (co_id)         REFERENCES course_outcomes(co_id)     ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE marks (
+    marks_id         INT AUTO_INCREMENT PRIMARY KEY,
+    student_id       INT NOT NULL,
+    assessment_id    INT NOT NULL,
+    marks_obtained   DECIMAL(6,2) NOT NULL CHECK (marks_obtained >= 0),
+    entered_by       INT NULL,                            -- faculty user_id who entered the mark
+    entered_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_marks_student    FOREIGN KEY (student_id)    REFERENCES students(student_id)      ON DELETE CASCADE,
+    CONSTRAINT fk_marks_assessment FOREIGN KEY (assessment_id) REFERENCES assessments(assessment_id) ON DELETE CASCADE,
+    CONSTRAINT fk_marks_entered_by FOREIGN KEY (entered_by)    REFERENCES users(user_id)             ON DELETE SET NULL,
+    UNIQUE KEY uq_marks (student_id, assessment_id)
+) ENGINE=InnoDB;
+
+-- ============================================================================
+-- MODULE 5: AGGREGATION & ATTAINMENT ENGINE (computed / cached results)
+-- ============================================================================
+
+CREATE TABLE attainment_results (
+    attainment_id      INT AUTO_INCREMENT PRIMARY KEY,
+    co_id              INT NOT NULL,
+    batch_id           INT NOT NULL,
+    attainment_level   DECIMAL(5,2) NOT NULL,             -- e.g. 0-3 scale or %
+    calculation_method VARCHAR(50)  NOT NULL DEFAULT 'WEIGHTED',
+    calculated_on      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_attain_co    FOREIGN KEY (co_id)    REFERENCES course_outcomes(co_id) ON DELETE CASCADE,
+    CONSTRAINT fk_attain_batch FOREIGN KEY (batch_id) REFERENCES batches(batch_id)      ON DELETE CASCADE,
+    UNIQUE KEY uq_attainment (co_id, batch_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE po_attainment_results (
+    po_attainment_id   INT AUTO_INCREMENT PRIMARY KEY,
+    po_id              INT NOT NULL,
+    batch_id           INT NOT NULL,
+    attainment_level   DECIMAL(5,2) NOT NULL,
+    calculated_on      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_poattain_po    FOREIGN KEY (po_id)    REFERENCES programme_outcomes(po_id) ON DELETE CASCADE,
+    CONSTRAINT fk_poattain_batch FOREIGN KEY (batch_id) REFERENCES batches(batch_id)         ON DELETE CASCADE,
+    UNIQUE KEY uq_po_attainment (po_id, batch_id)
+) ENGINE=InnoDB;
+
+-- ============================================================================
+-- STUDENT PROGRESS, REGULARITY & BACKLOG TRACKING
+-- ============================================================================
+
+CREATE TABLE attendance (
+    attendance_id          INT AUTO_INCREMENT PRIMARY KEY,
+    student_id             INT NOT NULL,
+    subject_id             INT NOT NULL,
+    academic_year          VARCHAR(9) NOT NULL,
+    total_classes          INT NOT NULL DEFAULT 0,
+    classes_attended       INT NOT NULL DEFAULT 0,
+    attendance_percentage  DECIMAL(5,2) GENERATED ALWAYS AS (
+                                CASE WHEN total_classes = 0 THEN 0
+                                     ELSE ROUND(classes_attended * 100.0 / total_classes, 2)
+                                END
+                            ) STORED,
+    CONSTRAINT fk_att_student FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    CONSTRAINT fk_att_subject FOREIGN KEY (subject_id) REFERENCES subjects(subject_id) ON DELETE CASCADE,
+    CONSTRAINT chk_att_counts CHECK (classes_attended <= total_classes),
+    UNIQUE KEY uq_attendance (student_id, subject_id, academic_year)
+) ENGINE=InnoDB;
+
+CREATE TABLE backlogs (
+    backlog_id       INT AUTO_INCREMENT PRIMARY KEY,
+    student_id       INT NOT NULL,
+    subject_id       INT NOT NULL,
+    attempt_count    INT NOT NULL DEFAULT 1,
+    status           ENUM('PENDING','CLEARED') NOT NULL DEFAULT 'PENDING',
+    semester_failed  VARCHAR(20) NOT NULL,               -- e.g. 'SEM3-2025'
+    cleared_date     DATE NULL,
+    CONSTRAINT fk_backlog_student FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    CONSTRAINT fk_backlog_subject FOREIGN KEY (subject_id) REFERENCES subjects(subject_id) ON DELETE CASCADE,
+    UNIQUE KEY uq_backlog (student_id, subject_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE student_progress (
+    progress_id       INT AUTO_INCREMENT PRIMARY KEY,
+    student_id        INT NOT NULL,
+    academic_year     VARCHAR(9) NOT NULL,
+    current_semester  TINYINT NOT NULL CHECK (current_semester BETWEEN 1 AND 8),
+    promotion_status  ENUM('PROMOTED','YEAR_DOWN','DETAINED') NOT NULL DEFAULT 'PROMOTED',
+    sgpa              DECIMAL(4,2),
+    cgpa              DECIMAL(4,2),
+    credits_earned    INT NOT NULL DEFAULT 0,
+    credits_required  INT NOT NULL DEFAULT 0,
+    updated_at        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_progress_student FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    UNIQUE KEY uq_progress (student_id, academic_year)
+) ENGINE=InnoDB;
+
+-- ============================================================================
+-- MODULE 7: REPORT GENERATION & EXPORT
+-- ============================================================================
+
+CREATE TABLE reports (
+    report_id            INT AUTO_INCREMENT PRIMARY KEY,
+    report_type          VARCHAR(50) NOT NULL,            -- MARKSHEET / CLASS_PERFORMANCE / CO_ATTAINMENT
+    generated_date        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    generated_by_user_id  INT NOT NULL,
+    file_path             VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_report_user FOREIGN KEY (generated_by_user_id) REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- ============================================================================
+-- INDEXES (query performance for dashboards/aggregation)
+-- ============================================================================
+
+CREATE INDEX idx_students_batch        ON students(batch_id);
+CREATE INDEX idx_subjects_faculty      ON subjects(faculty_id);
+CREATE INDEX idx_subjects_semester     ON subjects(semester);
+CREATE INDEX idx_enrollments_subject   ON enrollments(subject_id);
+CREATE INDEX idx_marks_assessment      ON marks(assessment_id);
+CREATE INDEX idx_assessments_subject   ON assessments(subject_id);
+CREATE INDEX idx_co_subject            ON course_outcomes(subject_id);
+CREATE INDEX idx_mapping_po            ON co_po_mapping(po_id);
+CREATE INDEX idx_attendance_student    ON attendance(student_id);
+CREATE INDEX idx_backlog_status        ON backlogs(status);
+CREATE INDEX idx_progress_year         ON student_progress(academic_year);
+
+-- ============================================================================
+-- SEED DATA (minimal, safe to remove/extend)
+-- ============================================================================
+
+-- Standard 12 NBA Programme Outcomes (edit text as per your institute's PEOs/POs)
+INSERT INTO programme_outcomes (po_code, description) VALUES
+('PO1',  'Engineering knowledge'),
+('PO2',  'Problem analysis'),
+('PO3',  'Design/development of solutions'),
+('PO4',  'Conduct investigations of complex problems'),
+('PO5',  'Modern tool usage'),
+('PO6',  'The engineer and society'),
+('PO7',  'Environment and sustainability'),
+('PO8',  'Ethics'),
+('PO9',  'Individual and team work'),
+('PO10', 'Communication'),
+('PO11', 'Project management and finance'),
+('PO12', 'Life-long learning');
+
+-- One admin login to bootstrap the system (replace password_hash with a real bcrypt hash)
+INSERT INTO users (name, email, password_hash, role) VALUES
+('System Admin', 'admin@college.edu', '$2b$12$REPLACE_WITH_REAL_BCRYPT_HASH', 'ADMIN');
+
+INSERT INTO admins (user_id) VALUES (LAST_INSERT_ID());
+
+-- ============================================================================
+-- USEFUL VIEWS (optional, ready-made for the dashboard layer)
+-- ============================================================================
+
+-- Student-wise attendance summary across all subjects
+CREATE OR REPLACE VIEW vw_student_attendance_summary AS
+SELECT s.student_id, s.roll_no, a.academic_year,
+       ROUND(AVG(a.attendance_percentage), 2) AS overall_attendance_pct,
+       SUM(CASE WHEN a.attendance_percentage < 75 THEN 1 ELSE 0 END) AS subjects_below_75pct
+FROM students s
+JOIN attendance a ON a.student_id = s.student_id
+GROUP BY s.student_id, s.roll_no, a.academic_year;
+
+-- Student-wise pending backlog count ("remaining subjects")
+CREATE OR REPLACE VIEW vw_student_remaining_subjects AS
+SELECT b.student_id, s.roll_no,
+       COUNT(*) AS pending_backlog_count,
+       GROUP_CONCAT(sub.subject_code ORDER BY sub.subject_code SEPARATOR ', ') AS pending_subjects
+FROM backlogs b
+JOIN students s  ON s.student_id = b.student_id
+JOIN subjects sub ON sub.subject_id = b.subject_id
+WHERE b.status = 'PENDING'
+GROUP BY b.student_id, s.roll_no;
+
+-- Class performance summary per assessment
+CREATE OR REPLACE VIEW vw_assessment_class_stats AS
+SELECT m.assessment_id, a.subject_id, a.title,
+       COUNT(*) AS students_appeared,
+       ROUND(AVG(m.marks_obtained), 2) AS class_average,
+       MAX(m.marks_obtained) AS highest_marks,
+       MIN(m.marks_obtained) AS lowest_marks,
+       ROUND(100.0 * SUM(CASE WHEN m.marks_obtained >= 0.4 * a.max_marks THEN 1 ELSE 0 END) / COUNT(*), 2) AS pass_percentage
+FROM marks m
+JOIN assessments a ON a.assessment_id = m.assessment_id
+GROUP BY m.assessment_id, a.subject_id, a.title;
+
+-- CO attainment with mapped POs (flattened, for reports)
+CREATE OR REPLACE VIEW vw_co_po_attainment AS
+SELECT co.subject_id, co.co_id, co.co_code, po.po_code,
+       cpm.mapping_strength, ar.batch_id, ar.attainment_level AS co_attainment_level
+FROM co_po_mapping cpm
+JOIN course_outcomes co ON co.co_id = cpm.co_id
+JOIN programme_outcomes po ON po.po_id = cpm.po_id
+LEFT JOIN attainment_results ar ON ar.co_id = co.co_id;
 

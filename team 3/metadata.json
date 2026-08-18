@@ -1,0 +1,6 @@
+{
+  "name": "Teacher & Student Quiz Dashboard",
+  "description": "Two dedicated dashboards: Teacher Dashboard for curating and assigning quizzes, and Student Dashboard for viewing assigned quizzes with Start and See Result actions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

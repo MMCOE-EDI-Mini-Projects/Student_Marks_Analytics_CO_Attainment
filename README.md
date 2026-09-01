@@ -141,7 +141,7 @@ The project demonstrates concepts from multiple Computer Engineering subjects.
 | Database Management Systems         | Relational database, normalization, SQL queries, constraints |
 | Data Structures                     | Arrays, Lists, HashMaps, Matrix representation               |
 | Software Engineering                | SDLC, Modular Design, Testing, Documentation                 |
-| Web Technology                      | REST APIs, HTML, CSS, JavaScript, Responsive UI              |
+| Web Technology                      | HTML, CSS, JavaScript, Responsive UI              |
 | Principles of Programming Languages | Exception handling, modular programming, abstraction         |
 
 ---

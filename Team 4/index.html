@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Student Marks Analytics &amp; CO/PO Attainment Tool</title>
+
+<!-- Tailwind (utility classes only, no custom config needed) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- jsPDF + autotable plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+<!-- SheetJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<div id="app-shell">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside id="sidebar" aria-label="Primary navigation">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">SA</div>
+      <div style="min-width:0;">
+        <div style="font-weight:700;font-size:13.5px;line-height:1.2;">Student Analytics</div>
+        <div style="font-size:10.5px;color:var(--text-faint);">CO/PO Attainment Tool</div>
+      </div>
+    </div>
+    <nav id="sidebar-nav" class="sidebar-nav" aria-label="Sections"></nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--accent-teal-soft);color:var(--accent-teal);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">DP</div>
+        <div style="min-width:0;flex:1;">
+          <div style="font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Dr. Priya Rane</div>
+          <span class="badge badge-info" style="margin-top:2px;">Faculty</span>
+        </div>
+        <button class="icon-btn" id="logout-btn" title="Logout" aria-label="Logout"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN REGION ================= -->
+  <div id="main-region">
+    <header id="topbar">
+      <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+        <button class="icon-btn" id="sidebar-toggle" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+        <div style="min-width:0;">
+          <div id="page-title" style="font-weight:700;font-size:15px;">Dashboard</div>
+          <div id="breadcrumb" class="crumb">Home / Dashboard</div>
+        </div>
+      </div>
+
+      <div id="filter-bar" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button class="icon-btn" id="search-btn" title="Search (Ctrl+K)" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button class="icon-btn" id="theme-toggle" title="Toggle theme" aria-label="Toggle theme"><i id="theme-icon" class="fa-solid fa-moon"></i></button>
+
+        <div style="position:relative;">
+          <button class="icon-btn" id="notif-btn" aria-label="Notifications"><i class="fa-solid fa-bell"></i><span class="notif-dot"></span></button>
+          <div id="notif-dropdown" class="hidden card" style="position:absolute;right:0;top:44px;width:300px;z-index:50;">
+            <div class="card-pad" style="border-bottom:1px solid var(--border);font-weight:600;font-size:13px;">Notifications</div>
+            <div id="notif-list"></div>
+          </div>
+        </div>
+
+        <div style="position:relative;">
+          <button class="icon-btn" id="profile-btn" aria-label="Profile menu" style="width:auto;padding:4px 8px;gap:6px;">
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--primary-soft);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">DP</div>
+            <i class="fa-solid fa-chevron-down" style="font-size:10px;"></i>
+          </button>
+          <div id="profile-dropdown" class="hidden card" style="position:absolute;right:0;top:44px;width:200px;z-index:50;">
+            <div class="card-pad" style="border-bottom:1px solid var(--border);">
+              <div style="font-weight:600;font-size:13px;">Dr. Priya Rane</div>
+              <div style="font-size:11px;color:var(--text-faint);">Class Coordinator, TE Comp</div>
+            </div>
+            <div class="nav-item" style="margin:8px;" onclick="App.navigate('settings')"><i class="fa-solid fa-gear"></i> Settings</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="page-content" role="main" aria-live="polite"></main>
+  </div>
+</div>
+
+<div id="toast-region" aria-live="polite"></div>
+
+<!-- ================= DATA & SERVICES ================= -->
+<script src="data/mockData.js"></script>
+<script src="services/analyticsService.js"></script>
+<script src="services/apiService.js"></script>
+<script src="services/reportService.js"></script>
+
+<!-- ================= UI MODULES ================= -->
+<script src="js/ui.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/students.js"></script>
+<script src="js/co.js"></script>
+<script src="js/po.js"></script>
+<script src="js/assessments.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

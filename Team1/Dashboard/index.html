@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduOBE - Outcome-Based Education Management System</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="login-screen" class="login-wrapper">
+    <div class="login-box">
+      <div class="login-header">
+        <div class="brand-icon brand-icon-lg">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h2>EduOBE Portal</h2>
+        <p>Sign in to your university account</p>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="role-select">Role</label>
+          <select id="role-select" class="form-control">
+            <option value="Admin">Administrator</option>
+            <option value="Faculty">Faculty</option>
+            <option value="Student">Student</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" class="form-control" value="admin@eduobe.ac.in" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-control" value="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <aside>
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="brand-text">
+        <h2>EduOBE</h2>
+        <p>Admin Panel</p>
+      </div>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item active" data-tab="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</li>
+      <li class="nav-item" data-tab="students"><i class="fa-solid fa-user-graduate"></i> Students</li>
+      <li class="nav-item" data-tab="faculty"><i class="fa-solid fa-chalkboard-user"></i> Faculty</li>
+      <li class="nav-item" data-tab="subjects"><i class="fa-solid fa-book-bookmark"></i> Subjects & Batches</li>
+      <li class="nav-item" data-tab="copo"><i class="fa-solid fa-network-wired"></i> CO-PO Mapping</li>
+      <li class="nav-item" data-tab="assessments"><i class="fa-solid fa-pen-to-square"></i> Assessments</li>
+      <li class="nav-item" data-tab="analytics"><i class="fa-solid fa-chart-line"></i> Analytics</li>
+      <li class="nav-item" data-tab="reports"><i class="fa-solid fa-file-contract"></i> Reports</li>
+      <li class="nav-item" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</li>
+    </ul>
+    <div class="user-profile-sidebar">
+      <div class="avatar" id="user-avatar">DA</div>
+      <div>
+        <div id="user-name" class="user-name">Dr. Admin</div>
+        <div id="user-email" class="user-email">admin@eduobe.ac.in</div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <div class="breadcrumbs">Home &gt; <span id="current-page-text">Dashboard</span></div>
+      <div class="header-actions">
+        <button class="icon-btn" aria-label="Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="badge">3</span>
+        </button>
+        <button class="btn btn-outline" id="logout-btn">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+        </button>
+      </div>
+    </header>
+
+    <div class="content-body">
+      
+      <section id="dashboard" class="view-section active">
+        <div class="section-title-group">
+          <h2>Dashboard Overview</h2>
+          <p>Welcome back! Here's what's happening across the university.</p>
+        </div>
+
+        <div class="grid-4">
+          <div class="stat-card">
+            <div>
+              <div class="stat-title">Total Students</div>
+              <div class="stat-value">1,248</div>
+              <div class="stat-subtext positive"><i class="fa-solid fa-arrow-up"></i> +8% this semester</div>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <div class="stat-title">Faculty Members</div>
+              <div class="stat-value">84</div>
+              <div class="stat-subtext positive"><i class="fa-solid fa-arrow-up"></i> +2 this month</div>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <div class="stat-title">Active Subjects</div>
+              <div class="stat-value">156</div>
+              <div class="stat-subtext">6 Active Semesters</div>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-book"></i></div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <div class="stat-title">Departments</div>
+              <div class="stat-value">12</div>
+              <div class="stat-subtext">UG + PG programmes</div>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-building-columns"></i></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">CO Attainment - CS501 Data Structures</div>
+            </div>
+            <canvas id="coAttainmentChart" height="200"></canvas>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Performance Trend (2025-26)</div>
+            </div>
+            <canvas id="performanceChart" height="200"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="students" class="view-section">
+        <div class="card-header">
+          <h2>Student Management</h2>
+          <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Student</button>
+        </div>
+        <div class="card">
+          <div class="filter-bar">
+            <input type="text" placeholder="Search by name, roll number..." class="form-control max-w-300">
+            <select class="form-control max-w-180">
+              <option>All Departments</option>
+              <option>Computer Science</option>
+              <option>Electronics</option>
+            </select>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Roll No.</th>
+                  <th>Name</th>
+                  <th>Department</th>
+                  <th>Semester</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2021-CS-101</td>
+                  <td>Arun Pillai</td>
+                  <td>Computer Science</td>
+                  <td>Sem 5</td>
+                  <td><span class="status-badge status-active">Active</span></td>
+                  <td><button class="btn btn-outline btn-sm"><i class="fa-solid fa-pen"></i></button></td>
+                </tr>
+                <tr>
+                  <td>2021-CS-102</td>
+                  <td>Ananya Sharma</td>
+                  <td>Computer Science</td>
+                  <td>Sem 5</td>
+                  <td><span class="status-badge status-active">Active</span></td>
+                  <td><button class="btn btn-outline btn-sm"><i class="fa-solid fa-pen"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="faculty" class="view-section">
+        <div class="card-header">
+          <h2>Faculty Management</h2>
+          <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Faculty</button>
+        </div>
+        <div class="card">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Faculty ID</th>
+                  <th>Name</th>
+                  <th>Department</th>
+                  <th>Assigned Course</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>FAC-201</td>
+                  <td>Dr. Lakshmi Devi</td>
+                  <td>Computer Science</td>
+                  <td>Machine Learning</td>
+                  <td><button class="btn btn-outline btn-sm"><i class="fa-solid fa-pen"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="subjects" class="view-section">
+        <div class="card-header">
+          <div>
+            <h2>Subject & Batch Management</h2>
+            <p class="subtitle">Configure academic batches, courses, and credit allocations.</p>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-outline"><i class="fa-solid fa-plus"></i> New Batch</button>
+            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Subject</button>
+          </div>
+        </div>
+
+        <div class="grid-4 mb-20">
+          <div class="stat-card">
+            <div>
+              <div class="stat-title">Current Batch</div>
+              <div class="stat-value">2023-27</div>
+              <div class="stat-subtext">Semester 5</div>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+          </div>
+          <div class="stat-card">
+            <div>
+              <div class="stat-title">Total Courses</div>
+              <div class="stat-value">42</div>
+              <div class="stat-subtext">Across 8 semesters</div>
+            </div>
+            <div class="stat-icon"><i class="fa-solid fa-book-bookmark"></i></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Subject Code</th>
+                  <th>Subject Title</th>
+                  <th>Department</th>
+                  <th>Credits</th>
+                  <th>Type</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>CS501</strong></td>
+                  <td>Data Structures & Algorithms</td>
+                  <td>Computer Science</td>
+                  <td>4</td>
+                  <td>Core Theory</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-outline btn-sm"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>CS502</strong></td>
+                  <td>Database Management Systems</td>
+                  <td>Computer Science</td>
+                  <td>3</td>
+                  <td>Core Theory</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn btn-outline btn-sm"><i class="fa-solid fa-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="copo" class="view-section">
+        <div class="card-header">
+          <div>
+            <h2>CO-PO Mapping Matrix</h2>
+            <p class="subtitle">Map Course Outcomes (CO) to Programme Outcomes (PO). Select correlation levels (0-3).</p>
+          </div>
+          <button class="btn btn-primary" id="save-matrix-btn"><i class="fa-solid fa-floppy-disk"></i> Save Matrix</button>
+        </div>
+
+        <div class="card">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th class="w-160">Course Outcome</th>
+                  <th>PO1</th>
+                  <th>PO2</th>
+                  <th>PO3</th>
+                  <th>PO4</th>
+                  <th>PO5</th>
+                  <th>PO6</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>CO1:</strong> Concepts Analysis</td>
+                  <td><select class="matrix-select m-3" data-val="3"><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option><option value="0">0</option></select></td>
+                  <td><select class="matrix-select m-2" data-val="2"><option value="3">3</option><option value="2" selected>2</option><option value="1">1</option><option value="0">0</option></select></td>
+                  <td><select class="matrix-select m-1" data-val="1"><option value="3">3</option><option value="2">2</option><option value="1" selected>1</option><option value="0">0</option></select></td>
+                  <td><select class="matrix-select m-0" data-val="0"><option value="3">3</option><option value="2">2</option><option value="1">1</option><option value="0" selected>0</option></select></td>
+                  <td><select class="matrix-select m-1" data-val="1"><option value="3">3</option><option value="2">2</option><option value="1" selected>1</option><option value="0">0</option></select></td>
+                  <td><select class="matrix-select m-2" data-val="2"><option value="3">3</option><option value="2" selected>2</option><option value="1">1</option><option value="0">0</option></select></td>
+                </tr>
+                <tr>
+                  <td><strong>CO2:</strong> Algorithmic Design</td>
+                  <td><select class="matrix-select m-2" data-val="2"><option value="3">3</option><option value="2" selected>2</option><option value="1">1</option><option value="0">0</option></select></td>
+                  <td><select class="matrix-select m-3" data-val="3"><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option><option value="0">0</option></select></td>
+                  <td><select class="matrix-select m-3" data-val="3"><option value="3" selected>3</option><option value="2">2</option><option value="1">1</option><option value="0">0</option></select></td>
+                  <td><select class="matrix-select m-1" data-val="1"><option value="3">3</option><option value="2">2</option><option value="1" selected>1</option><option value="0">0</option></select></td>
+                  <td><select class="matrix-select m-0" data-val="0"><option value="3">3</option><option value="2">2</option><option value="1">1</option><option value="0" selected>0</option></select></td>
+                  <td><select class="matrix-select m-1" data-val="1"><option value="3">3</option><option value="2">2</option><option value="1" selected>1</option><option value="0">0</option></select></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="assessments" class="view-section">
+        <h2>Assessment & Marks Entry</h2>
+        <p class="subtitle mb-20">Upload or configure test marks mapping to COs.</p>
+        <div class="card">
+          <form class="form-grid">
+            <div class="form-group">
+              <label>Select Subject</label>
+              <select class="form-control"><option>CS501 - Data Structures</option></select>
+            </div>
+            <div class="form-group">
+              <label>Assessment Type</label>
+              <select class="form-control"><option>Internal Assessment 1</option></select>
+            </div>
+            <div class="form-group span-2">
+              <label>CSV Dataset Upload</label>
+              <input type="file" class="form-control">
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="analytics" class="view-section">
+        <div class="card-header">
+          <div>
+            <h2>Advanced Analytics & Attainment</h2>
+            <p class="subtitle">Deep-dive outcome analysis, grade distributions, and threshold metrics.</p>
+          </div>
+          <button class="btn btn-outline"><i class="fa-solid fa-download"></i> Export Data</button>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Grade Distribution</div>
+            </div>
+            <canvas id="gradeDistributionChart" height="200"></canvas>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">PO Attainment Breakdown</div>
+            </div>
+            <canvas id="poAttainmentChart" height="200"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Batch Leaderboard (Top Performers)</div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Student Name</th>
+                  <th>Roll No.</th>
+                  <th>Overall CGPA</th>
+                  <th>CO Attainment Index</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>#1</strong></td>
+                  <td>Arun Pillai</td>
+                  <td>2021-CS-101</td>
+                  <td>9.8</td>
+                  <td><span class="status-badge status-active">94% Target</span></td>
+                </tr>
+                <tr>
+                  <td><strong>#2</strong></td>
+                  <td>Ananya Sharma</td>
+                  <td>2021-CS-102</td>
+                  <td>9.6</td>
+                  <td><span class="status-badge status-active">91% Target</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="reports" class="view-section">
+        <h2>Reports & Analytics Generation</h2>
+        <p class="subtitle mb-20">Download direct exportable evaluation data formats.</p>
+        <div class="grid-2">
+          <div class="card">
+            <h3>CO Attainment Summary</h3>
+            <p class="subtitle my-12">Comprehensive course outcome validation report per batch.</p>
+            <div class="btn-group">
+              <button class="btn btn-outline"><i class="fa-solid fa-file-pdf"></i> PDF Export</button>
+              <button class="btn btn-outline"><i class="fa-solid fa-file-excel"></i> Excel Export</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Programme Outcome (PO) Report</h3>
+            <p class="subtitle my-12">Overall department-level attainment matrix evaluation.</p>
+            <div class="btn-group">
+              <button class="btn btn-outline"><i class="fa-solid fa-file-pdf"></i> PDF Export</button>
+              <button class="btn btn-outline"><i class="fa-solid fa-file-excel"></i> Excel Export</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="view-section">
+        <div class="section-title-group">
+          <h2>System Settings</h2>
+          <p class="subtitle">Configure institutional parameters, thresholds, and role permissions.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="margin-bottom: 16px;">OBE Threshold Parameters</h3>
+            <form>
+              <div class="form-group">
+                <label>Target Attainment Percentage (%)</label>
+                <input type="number" class="form-control" value="70">
+              </div>
+              <div class="form-group">
+                <label>Internal/External Marks Ratio</label>
+                <select class="form-control">
+                  <option>40% Internal / 60% External</option>
+                  <option>30% Internal / 70% External</option>
+                  <option>50% Internal / 50% External</option>
+                </select>
+              </div>
+              <button type="button" class="btn btn-primary" onclick="alert('Settings Saved!')">Save Parameters</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom: 16px;">Institutional Details</h3>
+            <form>
+              <div class="form-group">
+                <label>University / College Name</label>
+                <input type="text" class="form-control" value="EduOBE Institute of Technology">
+              </div>
+              <div class="form-group">
+                <label>Academic Year</label>
+                <input type="text" class="form-control" value="2025-2026">
+              </div>
+              <button type="button" class="btn btn-primary" onclick="alert('Details Updated!')">Update Info</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

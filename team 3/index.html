@@ -4,15 +4,677 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz Portal - Teacher & Student Assessment System</title>
-    <meta name="description" content="Quiz Management & Assessment System with Teacher and Student Dashboards." />
-    <meta property="og:title" content="Quiz Portal - Teacher & Student Assessment System" />
-    <meta property="og:description" content="Quiz Management & Assessment System with Teacher and Student Dashboards." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="description" content="Pure HTML, CSS, and JavaScript Quiz Assessment System." />
+    <!-- Google Fonts: Plus Jakarta Sans for crisp, premium modern UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    <!-- Optional Confetti Effect for Student Celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <!-- Top Navigation Header -->
+    <header class="header">
+      <div class="container header-inner">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+              <path d="M6 6h10"/>
+              <path d="M6 10h10"/>
+              <path d="M6 14h6"/>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title-wrap">
+              <h1 class="brand-title">QuizPortal</h1>
+              <span class="brand-badge">Academic Pro</span>
+            </div>
+            <p class="brand-subtitle">Smart Evaluation &amp; Real-Time Assessment Platform</p>
+          </div>
+        </div>
+
+        <!-- Dashboard Role Switcher -->
+        <div class="nav-switcher">
+          <button type="button" id="btn-switch-teacher" class="nav-tab-btn active">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            Teacher Portal
+          </button>
+          <button type="button" id="btn-switch-student" class="nav-tab-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Student Portal
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+      <div class="container">
+
+        <!-- ================================================================ -->
+        <!-- 1. TEACHER DASHBOARD                                             -->
+        <!-- ================================================================ -->
+        <section id="teacher-dashboard-section">
+          <!-- Professor Profile Bar (Individual Professor Identity) -->
+          <div class="student-header-box">
+            <div class="student-info-left">
+              <div class="student-avatar" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="student-name-row">
+                  <span id="teacher-display-name" class="student-name">Dr. Rajesh Deshmukh</span>
+                  <span id="teacher-display-emp" class="badge badge-indigo font-mono">FACULTY-CS-08</span>
+                  <span class="status-indicator-live">Faculty Active</span>
+                </div>
+                <div id="teacher-display-meta" class="student-meta">Associate Professor &amp; Course Lead • Department of Computer Science</div>
+              </div>
+            </div>
+
+            <!-- Professor Role Badge -->
+            <div class="student-switcher-wrap">
+              <span class="student-switcher-label">Logged In:</span>
+              <span id="teacher-logged-in-badge" class="badge badge-indigo font-mono">Professor Account</span>
+            </div>
+          </div>
+
+          <!-- Colorful Teacher Welcome Hero -->
+          <div class="dashboard-hero teacher-hero">
+            <div class="hero-content">
+              <div class="hero-pill">
+                <span class="status-dot"></span>
+                <span>Instructor Workspace</span>
+              </div>
+              <h2 class="hero-heading">Welcome, Professor!</h2>
+              <p class="hero-subtext">Curate assessments with weighted marks, randomize questions, and distribute quizzes across batch divisions instantly.</p>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat-card">
+                <div class="hero-stat-icon icon-indigo">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <div>
+                  <span id="teacher-stat-quizzes" class="hero-stat-num">3</span>
+                  <span class="hero-stat-label">Total Quizzes</span>
+                </div>
+              </div>
+              <div class="hero-stat-card">
+                <div class="hero-stat-icon icon-emerald">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div>
+                  <span id="teacher-stat-students" class="hero-stat-num">6</span>
+                  <span class="hero-stat-label">Active Students</span>
+                </div>
+              </div>
+              <div class="hero-stat-card">
+                <div class="hero-stat-icon icon-amber">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div>
+                  <span id="teacher-stat-attempts" class="hero-stat-num">2</span>
+                  <span class="hero-stat-label">Submissions</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="view-header">
+            <div>
+              <h2 class="view-title">Assessment Management</h2>
+              <p class="view-desc">Switch between authoring questions, scheduling assignments, or viewing student score reports.</p>
+            </div>
+
+            <div class="sub-nav">
+              <button type="button" id="tab-btn-curate" class="sub-nav-btn active">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                1. Curate Quiz
+              </button>
+              <button type="button" id="tab-btn-assign" class="sub-nav-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                2. Assign Quiz
+              </button>
+              <button type="button" id="tab-btn-list" class="sub-nav-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                3. All Quizzes
+              </button>
+            </div>
+          </div>
+
+          <!-- TEACHER TAB 1: CURATE QUIZ FORM -->
+          <div id="teacher-view-curate" class="card">
+            <div class="card-header">
+              <div>
+                <h3 id="curate-header-title" class="card-title">Curate New Assessment</h3>
+                <p class="card-subtitle">Configure assessment properties, question bank, correct answers, and grading marks.</p>
+              </div>
+              <button type="button" id="curate-cancel-edit-btn" class="btn btn-secondary hidden">Cancel Edit</button>
+            </div>
+
+            <div id="curate-alert" class="alert alert-danger hidden"></div>
+
+            <!-- Quiz Properties Form -->
+            <div class="form-grid" style="margin-bottom: 20px;">
+              <div class="form-group col-span-2">
+                <label class="form-label" for="curate-title">Quiz Title *</label>
+                <input type="text" id="curate-title" class="input" placeholder="e.g. Unit 3: Graph Algorithms & Dynamic Programming" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="curate-subject-code">Subject Code *</label>
+                <input type="text" id="curate-subject-code" class="input" value="CS301" placeholder="e.g. CS301" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="curate-subject-name">Subject Name</label>
+                <input type="text" id="curate-subject-name" class="input" value="Data Structures & Algorithms" placeholder="e.g. Data Structures" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="curate-duration">Duration (Minutes)</label>
+                <input type="number" id="curate-duration" class="input" min="1" value="20" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="curate-passing-marks">Passing Marks</label>
+                <input type="number" id="curate-passing-marks" class="input" min="1" value="5" />
+              </div>
+
+              <div class="form-group col-span-2">
+                <label class="form-label">Calculated Total Marks</label>
+                <div id="curate-calculated-marks" class="input" style="background-color: var(--bg-alt); font-weight: 700; cursor: default;">
+                  0 Marks (0 Questions)
+                </div>
+              </div>
+
+              <div class="form-group col-span-full">
+                <label class="form-label" for="curate-instructions">Quiz Instructions</label>
+                <textarea id="curate-instructions" class="textarea" rows="2">Answer all multiple choice questions. Each question carries marks as indicated. Click submit before time runs out.</textarea>
+              </div>
+            </div>
+
+            <!-- Question Bank Header -->
+            <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <h4 style="font-size: 13px; font-weight: 700; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px;">
+                  Question Bank (<span id="curate-question-count">0</span>)
+                </h4>
+                <p style="font-size: 11px; color: var(--text-muted);">
+                  Select the radio button next to an option to designate it as the correct answer.
+                </p>
+              </div>
+              <button type="button" id="curate-add-q-btn" class="btn btn-subtle">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Question
+              </button>
+            </div>
+
+            <!-- Questions Container -->
+            <div id="curate-questions-container"></div>
+
+            <!-- Save Actions Footer -->
+            <div style="border-top: 1px solid var(--border-color); padding-top: 16px; display: flex; justify-content: flex-end;">
+              <button type="button" id="curate-save-btn" class="btn btn-primary">
+                Save Curated Quiz
+              </button>
+            </div>
+          </div>
+
+          <!-- TEACHER TAB 2: ASSIGN QUIZ FORM -->
+          <div id="teacher-view-assign" class="card hidden">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Assign Assessment to Student Batches</h3>
+                <p class="card-subtitle">Select the curated quiz, target student divisions, batch groups, and deadlines.</p>
+              </div>
+            </div>
+
+            <div id="assign-alert" class="alert alert-danger hidden"></div>
+
+            <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+              <!-- Left Column -->
+              <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="form-group">
+                  <label class="form-label" for="assign-quiz-select">Select Curated Quiz *</label>
+                  <select id="assign-quiz-select" class="select" style="font-weight: 600;"></select>
+                </div>
+
+                <div id="assign-quiz-preview" class="alert alert-info"></div>
+
+                <div class="form-group">
+                  <label class="form-label">Target Division / Class *</label>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <label class="option-box">
+                      <input type="checkbox" id="assign-div-a" checked class="option-radio" />
+                      <span style="font-size: 12px; font-weight: 600;">Division A</span>
+                    </label>
+                    <label class="option-box">
+                      <input type="checkbox" id="assign-div-b" class="option-radio" />
+                      <span style="font-size: 12px; font-weight: 600;">Division B</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Target Batches *</label>
+                  <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <label class="option-box">
+                      <input type="checkbox" id="assign-batch-a" checked class="option-radio" />
+                      <span style="font-size: 12px; font-weight: 600;">Batch A</span>
+                    </label>
+                    <label class="option-box">
+                      <input type="checkbox" id="assign-batch-b" checked class="option-radio" />
+                      <span style="font-size: 12px; font-weight: 600;">Batch B</span>
+                    </label>
+                    <label class="option-box">
+                      <input type="checkbox" id="assign-batch-c" checked class="option-radio" />
+                      <span style="font-size: 12px; font-weight: 600;">Batch C</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column -->
+              <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="form-group">
+                  <label class="form-label" for="assign-due-date">Submission Due Date *</label>
+                  <input type="date" id="assign-due-date" class="input" value="2026-09-30" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="assign-due-time">Submission Due Time</label>
+                  <input type="time" id="assign-due-time" class="input" value="23:59" />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Assessment Delivery Options</label>
+                  <div class="card" style="padding: 14px; margin-bottom: 0; background-color: var(--bg-alt); display: flex; flex-direction: column; gap: 10px;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+                      <input type="checkbox" id="assign-shuffle" checked class="option-radio" />
+                      <span>Randomize question order for each student</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer;">
+                      <input type="checkbox" id="assign-instant" checked class="option-radio" />
+                      <span>Allow students to view instant results &amp; breakdown</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 20px; display: flex; justify-content: flex-end;">
+              <button type="button" id="assign-submit-btn" class="btn btn-primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Assign Assessment to Students
+              </button>
+            </div>
+          </div>
+
+          <!-- TEACHER TAB 3: ALL QUIZZES LIST -->
+          <div id="teacher-view-list" class="card hidden">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Curated &amp; Assigned Quizzes</h3>
+                <p class="card-subtitle">Summary of all quizzes, active batch targets, and student submissions.</p>
+              </div>
+              <button type="button" id="list-curate-new-btn" class="btn btn-primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Curate New Quiz
+              </button>
+            </div>
+
+            <div class="table-wrapper">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Quiz Name</th>
+                    <th>Subject</th>
+                    <th>Target Group</th>
+                    <th class="text-center">Questions</th>
+                    <th class="text-center">Duration</th>
+                    <th class="text-center">Submissions</th>
+                    <th>Due Date</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="quizzes-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 2. STUDENT DASHBOARD                                             -->
+        <!-- ================================================================ -->
+        <section id="student-dashboard-section" class="hidden">
+          <!-- Student Profile Bar -->
+          <div class="student-header-box">
+            <div class="student-info-left">
+              <div class="student-avatar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                  <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                </svg>
+              </div>
+              <div>
+                <div class="student-name-row">
+                  <span id="student-display-name" class="student-name">Aarav Sharma</span>
+                  <span id="student-display-roll" class="badge badge-student font-mono">CS-2024-042</span>
+                  <span class="status-indicator-live">Enrolled</span>
+                </div>
+                <div id="student-display-meta" class="student-meta">Division A • Batch A • Department of Computer Science</div>
+              </div>
+            </div>
+
+            <!-- Student Profile Badge -->
+            <div class="student-switcher-wrap">
+              <span class="student-switcher-label">Logged In:</span>
+              <span id="student-logged-in-badge" class="badge badge-indigo font-mono">Student Account</span>
+            </div>
+          </div>
+
+          <!-- Student Performance Highlights Banner -->
+          <div class="dashboard-hero student-hero">
+            <div class="hero-content">
+              <div class="hero-pill student-pill">
+                <span class="status-dot green"></span>
+                <span>Active Semester Assessment</span>
+              </div>
+              <h2 class="hero-heading" id="student-welcome-heading">Ready for your test, Aarav?</h2>
+              <p class="hero-subtext">Take timed online quizzes, view instant grading feedback, and analyze answer explanations to master your engineering coursework.</p>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat-card card-teal">
+                <div class="hero-stat-icon icon-teal">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                </div>
+                <div>
+                  <span id="student-stat-completed" class="hero-stat-num">1</span>
+                  <span class="hero-stat-label">Quizzes Completed</span>
+                </div>
+              </div>
+              <div class="hero-stat-card card-blue">
+                <div class="hero-stat-icon icon-blue">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                  <span id="student-stat-pending" class="hero-stat-num">2</span>
+                  <span class="hero-stat-label">Pending Tests</span>
+                </div>
+              </div>
+              <div class="hero-stat-card card-purple">
+                <div class="hero-stat-icon icon-purple">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div>
+                  <span id="student-stat-avg" class="hero-stat-num">100%</span>
+                  <span class="hero-stat-label">Average Score</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quizzes Assigned Section -->
+          <div>
+            <div class="section-title-bar">
+              <div>
+                <h3 class="section-heading">
+                  Assigned Examinations <span id="student-quiz-count" class="count-pill">(0)</span>
+                </h3>
+                <p class="section-subheading">
+                  Click <strong>Start Test</strong> to launch exam mode, or click <strong>View Report</strong> to review your score sheet and correct explanations.
+                </p>
+              </div>
+            </div>
+
+            <div id="student-quiz-grid" class="quiz-grid"></div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Clean Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <span>Quiz Assessment Portal • Department of Computer Science</span>
+        <span style="font-size: 11px; color: var(--text-light);">Academic Year 2024–2026</span>
+      </div>
+    </footer>
+
+    <!-- ==================================================================== -->
+    <!-- MODAL 1: TAKE QUIZ EXAM MODAL                                        -->
+    <!-- ==================================================================== -->
+    <div id="exam-modal" class="modal-overlay hidden">
+      <div class="modal-dialog">
+        <!-- Exam Header -->
+        <div class="modal-header">
+          <div>
+            <span id="exam-quiz-title" style="font-size: 11px; font-weight: 700; color: #818cf8; text-transform: uppercase;"></span>
+            <div id="exam-student-info" style="font-size: 12px; color: #cbd5e1;"></div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div id="exam-timer" class="exam-timer-box">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span id="exam-timer-text">Time Left: 00:00</span>
+            </div>
+
+            <button type="button" id="exam-close-btn" class="btn-danger-ghost" title="Exit Quiz" style="color: #94a3b8;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Exam Body -->
+        <div class="modal-body">
+          <!-- Question Status Bar & Palette -->
+          <div style="background-color: var(--bg-alt); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 12px 16px; margin-bottom: 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
+            <div>
+              <span id="exam-q-current" style="font-size: 12px; font-weight: 700; color: var(--text-main);">Question 1 of 5</span>
+              <span id="exam-q-marks" style="font-size: 12px; color: var(--text-muted); margin-left: 4px;">(2 Marks)</span>
+            </div>
+
+            <div id="exam-palette" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+          </div>
+
+          <!-- Question Content -->
+          <div style="margin-bottom: 24px;">
+            <h4 id="exam-q-text" style="font-size: 15px; font-weight: 600; color: var(--text-main); line-height: 1.5; margin-bottom: 16px;"></h4>
+            <div id="exam-options-container"></div>
+          </div>
+        </div>
+
+        <!-- Exam Footer -->
+        <div class="modal-footer">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button type="button" id="exam-clear-choice-btn" class="btn btn-secondary" style="font-size: 11px; padding: 6px 10px;">Clear Choice</button>
+            <span id="exam-answered-count" style="font-size: 12px; color: var(--text-muted);">Answered: 0 / 0</span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button type="button" id="exam-prev-btn" class="btn btn-secondary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              Previous
+            </button>
+            <button type="button" id="exam-next-btn" class="btn btn-primary">
+              Next
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+            <button type="button" id="exam-submit-btn" class="btn btn-success hidden">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Submit Quiz
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exam Submit Confirmation Dialog -->
+    <div id="exam-confirm-dialog" class="modal-overlay hidden" style="z-index: 60;">
+      <div class="card" style="max-width: 440px; width: 100%; padding: 24px; box-shadow: var(--shadow-2xl);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-subtle); color: var(--primary); display: flex; align-items: center; justify-content: center; shrink: 0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div>
+            <h4 style="font-size: 15px; font-weight: 700; color: var(--text-main);">Submit Assessment?</h4>
+            <p id="exam-confirm-answered-text" style="font-size: 12px; color: var(--text-muted);">You have answered 0 of 0 questions.</p>
+          </div>
+        </div>
+
+        <div id="exam-confirm-warning" class="alert alert-warning hidden" style="margin-bottom: 16px;"></div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" id="exam-confirm-cancel-btn" class="btn btn-secondary">Keep Answering</button>
+          <button type="button" id="exam-confirm-yes-btn" class="btn btn-primary">Yes, Submit Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- MODAL 2: DETAILED QUIZ RESULTS REVIEW MODAL                          -->
+    <!-- ==================================================================== -->
+    <div id="result-modal" class="modal-overlay hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div>
+            <span id="result-header-quiz" style="font-size: 11px; font-weight: 700; color: #818cf8; text-transform: uppercase;">Assessment Report</span>
+            <h3 id="result-quiz-title" style="font-size: 15px; font-weight: 700; color: #ffffff; margin-top: 2px;"></h3>
+          </div>
+          <button type="button" id="result-header-close-btn" class="btn-danger-ghost" style="color: #94a3b8;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Summary Score Card -->
+          <div class="score-summary-card">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <div id="result-score-circle" class="score-badge-circle passed">100%</div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span id="result-status-badge" class="badge badge-success">Passed</span>
+                  <span id="result-passing-label" style="font-size: 12px; color: var(--text-muted);">(Passing: 5 Marks)</span>
+                </div>
+                <div id="result-score-text" style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 2px;">
+                  Score: 0 / 0 Marks
+                </div>
+                <div id="result-student-label" style="font-size: 12px; color: var(--text-muted);"></div>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #ffffff; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+              <div>
+                <span style="display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Time Taken</span>
+                <span id="result-time-taken" style="font-size: 13px; font-weight: 600; color: var(--text-main);">0m 0s</span>
+              </div>
+              <div>
+                <span style="display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Submitted</span>
+                <span id="result-submitted-at" style="font-size: 13px; font-weight: 600; color: var(--text-main);">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Question-by-Question Review -->
+          <div>
+            <h4 style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 12px;">
+              Detailed Question Analysis
+            </h4>
+            <div id="result-questions-list"></div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div id="result-footer-date" style="font-size: 11px; color: var(--text-muted);"></div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" id="result-retake-btn" class="btn btn-secondary">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+              Retake Quiz
+            </button>
+            <button type="button" id="result-close-btn" class="btn btn-primary">Close Review</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- MODAL 3: TEACHER ALL SUBMISSIONS BREAKDOWN MODAL                     -->
+    <!-- ==================================================================== -->
+    <div id="submissions-modal" class="modal-overlay hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div>
+            <span id="submissions-quiz-code" style="font-size: 11px; font-weight: 700; color: #818cf8; text-transform: uppercase;">Student Submissions</span>
+            <h3 id="submissions-quiz-title" style="font-size: 15px; font-weight: 700; color: #ffffff; margin-top: 2px;"></h3>
+          </div>
+          <button type="button" id="submissions-header-close-btn" class="btn-danger-ghost" style="color: #94a3b8;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Quick Metric Stats -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px;">
+            <div class="card" style="padding: 14px; margin-bottom: 0;">
+              <div style="font-size: 11px; color: var(--text-muted);">Total Submissions</div>
+              <div id="sub-metric-total" style="font-size: 20px; font-weight: 800; color: var(--text-main); margin-top: 2px;">0</div>
+            </div>
+            <div class="card" style="padding: 14px; margin-bottom: 0;">
+              <div style="font-size: 11px; color: var(--text-muted);">Average Score</div>
+              <div id="sub-metric-avg" style="font-size: 20px; font-weight: 800; color: var(--primary); margin-top: 2px;">0%</div>
+            </div>
+            <div class="card" style="padding: 14px; margin-bottom: 0;">
+              <div style="font-size: 11px; color: var(--text-muted);">Passing Rate</div>
+              <div id="sub-metric-pass" style="font-size: 20px; font-weight: 800; color: var(--success); margin-top: 2px;">0%</div>
+            </div>
+          </div>
+
+          <!-- Search & Filter Input -->
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px;">
+            <input type="text" id="submissions-search" class="input" placeholder="Search student by name or roll no..." style="max-width: 320px;" />
+            <span id="sub-records-count" style="font-size: 12px; color: var(--text-muted);">Showing 0 records</span>
+          </div>
+
+          <!-- Submissions Table -->
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Roll Number</th>
+                  <th>Division &amp; Batch</th>
+                  <th class="text-center">Score</th>
+                  <th class="text-center">Percentage</th>
+                  <th class="text-center">Status</th>
+                  <th class="text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="submissions-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="justify-content: flex-end;">
+          <button type="button" id="submissions-close-btn" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pure Vanilla JavaScript Script -->
+    <script src="app.js"></script>
   </body>
 </html>
-

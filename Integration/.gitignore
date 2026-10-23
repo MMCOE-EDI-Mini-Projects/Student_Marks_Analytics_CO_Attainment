@@ -1,0 +1,13 @@
+target/
+.idea/
+.vscode/
+*.log
+.DS_Store
+
+# Local database credentials
+**/db.properties
+.env
+.env.*
+
+# Generated or temporary files
+*.class
